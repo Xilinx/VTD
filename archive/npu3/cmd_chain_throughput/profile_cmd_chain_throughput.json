@@ -1,8 +1,9 @@
 {
   "version": "1.0",
   "execution" : {
-    "iterations": 1,
+    "iterations": 20,
     "verbose": false,
-    "depth": 512
+    "mode": "throughput",
+    "depth": 1
   }
 }
