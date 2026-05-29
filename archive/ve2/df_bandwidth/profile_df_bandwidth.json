@@ -6,7 +6,7 @@
   "bindings": [
     {
       "name": "g.read_ddr",
-      "size": 1073741824,
+      "size": 1048576,
       "init": {
         "stride": 4,
         "value": 3735928559
@@ -14,7 +14,7 @@
     },
     {
       "name": "g.write_ddr",
-      "size": 1073741824,
+      "size": 1048576,
       "validate": {
         "name": "g.read_ddr"
       }
