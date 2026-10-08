@@ -3,7 +3,7 @@
     "product": 1,
     "schema_version": 0,
     "major": 3,
-    "minor": 0
+    "minor": 2
   },
   "data_format": null,
   "categories": [
@@ -77,6 +77,12 @@
       "name": "EVENT_TRACE_CATEGORY_GPU_VIEW",
       "description": "GPU View related events.",
       "id": 11,
+      "forced_id": false
+    },
+    {
+      "name": "EVENT_TRACE_CATEGORY_DEBUG",
+      "description": "Debug-related events.",
+      "id": 12,
       "forced_id": false
     }
   ],
@@ -219,14 +225,6 @@
         "description": "Doorbell index",
         "lookup": "",
         "type": "uint32",
-        "count": 1,
-        "format": ""
-      },
-      {
-        "name": "context_handle",
-        "description": "Handle of the context associated to the doorbell",
-        "lookup": "",
-        "type": "uint64",
         "count": 1,
         "format": ""
       }
@@ -435,9 +433,9 @@
         "format": "08x"
       },
       {
-        "name": "band",
-        "description": "",
-        "lookup": "TODO",
+        "name": "level",
+        "description": "Priority level (0-31).",
+        "lookup": "",
         "type": "uint8",
         "count": 1,
         "format": ""
@@ -699,8 +697,8 @@
         "format": "08x"
       },
       {
-        "name": "priority_band",
-        "description": "Priority band of the hardware context.",
+        "name": "priority_level",
+        "description": "Priority level of the hardware context (0-31).",
         "lookup": "",
         "type": "uint32",
         "count": 1,
@@ -1009,8 +1007,8 @@
         "format": "08x"
       },
       {
-        "name": "priority_band",
-        "description": "Priority band of the context",
+        "name": "priority_level",
+        "description": "Priority level of the context (0-31)",
         "lookup": "",
         "type": "uint32",
         "count": 1,
@@ -1093,6 +1091,192 @@
         "type": "uint8",
         "count": 2,
         "format": ""
+      }
+    ],
+    "ym_pair_state": [
+      {
+        "name": "level",
+        "description": "Soft-RT level (16-29) for this yield pair.",
+        "lookup": "",
+        "type": "uint8",
+        "count": 1,
+        "format": ""
+      },
+      {
+        "name": "from_state",
+        "description": "Previous pair state (0=IDLE, 1=ACTIVE, 2=YIELDING, 3=PAUSE).",
+        "lookup": "",
+        "type": "uint8",
+        "count": 1,
+        "format": ""
+      },
+      {
+        "name": "to_state",
+        "description": "New pair state (0=IDLE, 1=ACTIVE, 2=YIELDING, 3=PAUSE).",
+        "lookup": "",
+        "type": "uint8",
+        "count": 1,
+        "format": ""
+      },
+      {
+        "name": "reserved",
+        "description": "Reserved field.",
+        "lookup": "",
+        "type": "uint8",
+        "count": 1,
+        "format": ""
+      },
+      {
+        "name": "remaining_ticks",
+        "description": "Ticks remaining in new state.",
+        "lookup": "",
+        "type": "uint64",
+        "count": 1,
+        "format": ""
+      }
+    ],
+    "ym_pair_evaluation": [
+      {
+        "name": "level",
+        "description": "Soft-RT level (16-29) being evaluated.",
+        "lookup": "",
+        "type": "uint8",
+        "count": 1,
+        "format": ""
+      },
+      {
+        "name": "target_percentage",
+        "description": "Fairness target percentage (0-50).",
+        "lookup": "",
+        "type": "uint8",
+        "count": 1,
+        "format": ""
+      },
+      {
+        "name": "reserved",
+        "description": "Reserved field.",
+        "lookup": "",
+        "type": "uint16",
+        "count": 1,
+        "format": ""
+      },
+      {
+        "name": "owner_ticks",
+        "description": "Ticks the owner level ran.",
+        "lookup": "",
+        "type": "uint64",
+        "count": 1,
+        "format": ""
+      },
+      {
+        "name": "below_ticks",
+        "description": "Total ticks levels below ran.",
+        "lookup": "",
+        "type": "uint64",
+        "count": 1,
+        "format": ""
+      },
+      {
+        "name": "below_active_ticks",
+        "description": "Ticks levels below ran during ACTIVE period.",
+        "lookup": "",
+        "type": "uint64",
+        "count": 1,
+        "format": ""
+      },
+      {
+        "name": "below_ready_ticks",
+        "description": "Ticks levels below were ready (running + starved).",
+        "lookup": "",
+        "type": "uint64",
+        "count": 1,
+        "format": ""
+      },
+      {
+        "name": "yield_duration_needed",
+        "description": "Computed yield duration in ticks (0 if no yield needed).",
+        "lookup": "",
+        "type": "uint64",
+        "count": 1,
+        "format": ""
+      }
+    ],
+    "ym_level_selected": [
+      {
+        "name": "selected_level",
+        "description": "Priority level selected to run (0-31, 0xFF=none/idle).",
+        "lookup": "",
+        "type": "uint32",
+        "count": 1,
+        "format": ""
+      },
+      {
+        "name": "active_level_mask",
+        "description": "Bitmask of levels with runnable processes.",
+        "lookup": "",
+        "type": "uint32",
+        "count": 1,
+        "format": ""
+      },
+      {
+        "name": "reserved",
+        "description": "Padding for 8-byte alignment",
+        "lookup": "",
+        "type": "uint8",
+        "count": 4,
+        "format": ""
+      }
+    ],
+    "ym_pause": [
+      {
+        "name": "pause_state",
+        "description": "Pause state (0=CLEARED, 1=REQUESTED, 2=ACKNOWLEDGED).",
+        "lookup": "",
+        "type": "uint8",
+        "count": 1,
+        "format": ""
+      },
+      {
+        "name": "requesting_level",
+        "description": "Hard-RT level requesting pause (30-31, 0xFF if N/A).",
+        "lookup": "",
+        "type": "uint8",
+        "count": 1,
+        "format": ""
+      },
+      {
+        "name": "reserved",
+        "description": "Padding for 8-byte alignment",
+        "lookup": "",
+        "type": "uint8",
+        "count": 2,
+        "format": ""
+      }
+    ],
+    "debug_event": [
+      {
+        "name": "arg0",
+        "description": "Generic debug argument 0.",
+        "lookup": "",
+        "type": "uint32",
+        "count": 1,
+        "format": "08x"
+      },
+      {
+        "name": "arg1",
+        "description": "Generic debug argument 1.",
+        "lookup": "",
+        "type": "uint32",
+        "count": 1,
+        "format": "08x"
+      },
+      {
+        "name": "arg2",
+        "description": "Generic debug argument 2.",
+        "lookup": "",
+        "type": "uint32",
+        "count": 1,
+        "format": "08x"
       }
     ]
   },
@@ -1386,8 +1570,8 @@
           "format": "08x"
         },
         {
-          "name": "priority_band",
-          "description": "Priority band of the hardware context.",
+          "name": "priority_level",
+          "description": "Priority level of the hardware context (0-31).",
           "lookup": "",
           "type": "uint32",
           "count": 1,
@@ -2052,6 +2236,36 @@
       "type": null
     },
     "25": {
+      "name": "context_ready_to_running",
+      "description": "Context has pending work and was selected to run.",
+      "categories": [
+        "EVENT_TRACE_CATEGORY_HWS",
+        "EVENT_TRACE_CATEGORY_GPU_VIEW"
+      ],
+      "args_name": "context_event",
+      "forced_id": false,
+      "category_mask": 2052,
+      "args": [
+        {
+          "name": "context_id",
+          "description": "The context ID associated with the event.",
+          "lookup": "",
+          "type": "uint32",
+          "count": 1,
+          "format": ""
+        },
+        {
+          "name": "context_handle",
+          "description": "The handle associated to the context.",
+          "lookup": "",
+          "type": "uint64",
+          "count": 1,
+          "format": ""
+        }
+      ],
+      "type": null
+    },
+    "26": {
       "name": "context_ready",
       "description": "Context has pending work to do, but has not been scheduled to run yet.",
       "categories": [
@@ -2081,7 +2295,7 @@
       ],
       "type": null
     },
-    "26": {
+    "27": {
       "name": "context_deleted",
       "description": "Context deleted event.",
       "categories": [
@@ -2110,7 +2324,7 @@
       ],
       "type": null
     },
-    "27": {
+    "28": {
       "name": "doorbell_interrupt",
       "description": "Doorbell interrupt triggered.",
       "categories": [
@@ -2127,19 +2341,11 @@
           "type": "uint32",
           "count": 1,
           "format": ""
-        },
-        {
-          "name": "context_handle",
-          "description": "Handle of the context associated to the doorbell",
-          "lookup": "",
-          "type": "uint64",
-          "count": 1,
-          "format": ""
         }
       ],
       "type": null
     },
-    "28": {
+    "29": {
       "name": "doorbell_interrupt_processed",
       "description": "Doorbell interrupt processed.",
       "categories": [
@@ -2156,19 +2362,11 @@
           "type": "uint32",
           "count": 1,
           "format": ""
-        },
-        {
-          "name": "context_handle",
-          "description": "Handle of the context associated to the doorbell",
-          "lookup": "",
-          "type": "uint64",
-          "count": 1,
-          "format": ""
         }
       ],
       "type": null
     },
-    "29": {
+    "30": {
       "name": "partition_creation",
       "description": "Partition creation event.",
       "categories": [
@@ -2221,7 +2419,7 @@
       ],
       "type": null
     },
-    "30": {
+    "31": {
       "name": "partition_clear_context",
       "description": "Partition clear context event.",
       "categories": [
@@ -2258,7 +2456,7 @@
       ],
       "type": null
     },
-    "31": {
+    "32": {
       "name": "partition_teardown",
       "description": "Partition teardown event.",
       "categories": [
@@ -2295,7 +2493,7 @@
       ],
       "type": null
     },
-    "32": {
+    "33": {
       "name": "preempt_timeout_expired",
       "description": "Preemption timer for context expired",
       "categories": [
@@ -2324,7 +2522,7 @@
       ],
       "type": null
     },
-    "33": {
+    "34": {
       "name": "process_idle_to_runnable",
       "description": "Process transitioned from idle to runnable state.",
       "categories": [
@@ -2344,9 +2542,9 @@
           "format": "08x"
         },
         {
-          "name": "band",
-          "description": "",
-          "lookup": "TODO",
+          "name": "level",
+          "description": "Priority level (0-31).",
+          "lookup": "",
           "type": "uint8",
           "count": 1,
           "format": ""
@@ -2362,7 +2560,7 @@
       ],
       "type": null
     },
-    "34": {
+    "35": {
       "name": "process_runnable_to_idle",
       "description": "Process transitioned from runnable to idle state.",
       "categories": [
@@ -2382,9 +2580,9 @@
           "format": "08x"
         },
         {
-          "name": "band",
-          "description": "",
-          "lookup": "TODO",
+          "name": "level",
+          "description": "Priority level (0-31).",
+          "lookup": "",
           "type": "uint8",
           "count": 1,
           "format": ""
@@ -2400,7 +2598,7 @@
       ],
       "type": null
     },
-    "35": {
+    "36": {
       "name": "request_preemption",
       "description": "Preemption was requested for context",
       "categories": [
@@ -2429,7 +2627,7 @@
       ],
       "type": null
     },
-    "36": {
+    "37": {
       "name": "time_quantum_ctx_expired",
       "description": "TQ timer for context expired",
       "categories": [
@@ -2458,7 +2656,7 @@
       ],
       "type": null
     },
-    "37": {
+    "38": {
       "name": "time_quantum_process_expired",
       "description": "TQ timer for process expired",
       "categories": [
@@ -2478,9 +2676,9 @@
           "format": "08x"
         },
         {
-          "name": "band",
-          "description": "",
-          "lookup": "TODO",
+          "name": "level",
+          "description": "Priority level (0-31).",
+          "lookup": "",
           "type": "uint8",
           "count": 1,
           "format": ""
@@ -2496,7 +2694,7 @@
       ],
       "type": null
     },
-    "38": {
+    "39": {
       "name": "unhandled_timer",
       "description": "Unknown timer expired",
       "categories": [
@@ -2518,7 +2716,7 @@
       ],
       "type": null
     },
-    "39": {
+    "40": {
       "name": "context_idle",
       "description": "Context has no pending commands and went idle.",
       "categories": [
@@ -2548,7 +2746,7 @@
       ],
       "type": null
     },
-    "40": {
+    "41": {
       "name": "ctx_add",
       "description": "Context added with correct PASID correlation",
       "categories": [
@@ -2575,8 +2773,8 @@
           "format": "08x"
         },
         {
-          "name": "priority_band",
-          "description": "Priority band of the context",
+          "name": "priority_level",
+          "description": "Priority level of the context (0-31)",
           "lookup": "",
           "type": "uint32",
           "count": 1,
@@ -2585,7 +2783,211 @@
       ],
       "type": null
     },
-    "41": {
+    "42": {
+      "name": "ym_pair_state",
+      "description": "Per-pair yield manager state transition for a soft-RT level.",
+      "categories": [
+        "EVENT_TRACE_CATEGORY_HWS"
+      ],
+      "args_name": "ym_pair_state",
+      "forced_id": false,
+      "category_mask": 4,
+      "args": [
+        {
+          "name": "level",
+          "description": "Soft-RT level (16-29) for this yield pair.",
+          "lookup": "",
+          "type": "uint8",
+          "count": 1,
+          "format": ""
+        },
+        {
+          "name": "from_state",
+          "description": "Previous pair state (0=IDLE, 1=ACTIVE, 2=YIELDING, 3=PAUSE).",
+          "lookup": "",
+          "type": "uint8",
+          "count": 1,
+          "format": ""
+        },
+        {
+          "name": "to_state",
+          "description": "New pair state (0=IDLE, 1=ACTIVE, 2=YIELDING, 3=PAUSE).",
+          "lookup": "",
+          "type": "uint8",
+          "count": 1,
+          "format": ""
+        },
+        {
+          "name": "reserved",
+          "description": "Reserved field.",
+          "lookup": "",
+          "type": "uint8",
+          "count": 1,
+          "format": ""
+        },
+        {
+          "name": "remaining_ticks",
+          "description": "Ticks remaining in new state.",
+          "lookup": "",
+          "type": "uint64",
+          "count": 1,
+          "format": ""
+        }
+      ],
+      "type": null
+    },
+    "43": {
+      "name": "ym_pair_evaluation",
+      "description": "Per-pair fairness evaluation with starvation metrics.",
+      "categories": [
+        "EVENT_TRACE_CATEGORY_HWS"
+      ],
+      "args_name": "ym_pair_evaluation",
+      "forced_id": false,
+      "category_mask": 4,
+      "args": [
+        {
+          "name": "level",
+          "description": "Soft-RT level (16-29) being evaluated.",
+          "lookup": "",
+          "type": "uint8",
+          "count": 1,
+          "format": ""
+        },
+        {
+          "name": "target_percentage",
+          "description": "Fairness target percentage (0-50).",
+          "lookup": "",
+          "type": "uint8",
+          "count": 1,
+          "format": ""
+        },
+        {
+          "name": "reserved",
+          "description": "Reserved field.",
+          "lookup": "",
+          "type": "uint16",
+          "count": 1,
+          "format": ""
+        },
+        {
+          "name": "owner_ticks",
+          "description": "Ticks the owner level ran.",
+          "lookup": "",
+          "type": "uint64",
+          "count": 1,
+          "format": ""
+        },
+        {
+          "name": "below_ticks",
+          "description": "Total ticks levels below ran.",
+          "lookup": "",
+          "type": "uint64",
+          "count": 1,
+          "format": ""
+        },
+        {
+          "name": "below_active_ticks",
+          "description": "Ticks levels below ran during ACTIVE period.",
+          "lookup": "",
+          "type": "uint64",
+          "count": 1,
+          "format": ""
+        },
+        {
+          "name": "below_ready_ticks",
+          "description": "Ticks levels below were ready (running + starved).",
+          "lookup": "",
+          "type": "uint64",
+          "count": 1,
+          "format": ""
+        },
+        {
+          "name": "yield_duration_needed",
+          "description": "Computed yield duration in ticks (0 if no yield needed).",
+          "lookup": "",
+          "type": "uint64",
+          "count": 1,
+          "format": ""
+        }
+      ],
+      "type": null
+    },
+    "44": {
+      "name": "ym_level_selected",
+      "description": "Yield manager level selection decision.",
+      "categories": [
+        "EVENT_TRACE_CATEGORY_HWS"
+      ],
+      "args_name": "ym_level_selected",
+      "forced_id": false,
+      "category_mask": 4,
+      "args": [
+        {
+          "name": "selected_level",
+          "description": "Priority level selected to run (0-31, 0xFF=none/idle).",
+          "lookup": "",
+          "type": "uint32",
+          "count": 1,
+          "format": ""
+        },
+        {
+          "name": "active_level_mask",
+          "description": "Bitmask of levels with runnable processes.",
+          "lookup": "",
+          "type": "uint32",
+          "count": 1,
+          "format": ""
+        },
+        {
+          "name": "reserved",
+          "description": "Padding for 8-byte alignment",
+          "lookup": "",
+          "type": "uint8",
+          "count": 4,
+          "format": ""
+        }
+      ],
+      "type": null
+    },
+    "45": {
+      "name": "ym_pause",
+      "description": "Yield manager hard-RT pause state change.",
+      "categories": [
+        "EVENT_TRACE_CATEGORY_HWS"
+      ],
+      "args_name": "ym_pause",
+      "forced_id": false,
+      "category_mask": 4,
+      "args": [
+        {
+          "name": "pause_state",
+          "description": "Pause state (0=CLEARED, 1=REQUESTED, 2=ACKNOWLEDGED).",
+          "lookup": "",
+          "type": "uint8",
+          "count": 1,
+          "format": ""
+        },
+        {
+          "name": "requesting_level",
+          "description": "Hard-RT level requesting pause (30-31, 0xFF if N/A).",
+          "lookup": "",
+          "type": "uint8",
+          "count": 1,
+          "format": ""
+        },
+        {
+          "name": "reserved",
+          "description": "Padding for 8-byte alignment",
+          "lookup": "",
+          "type": "uint8",
+          "count": 2,
+          "format": ""
+        }
+      ],
+      "type": null
+    },
+    "46": {
       "name": "aie4_pwr",
       "description": "AIE4 power-up event.",
       "categories": [
@@ -2606,7 +3008,7 @@
       ],
       "type": null
     },
-    "42": {
+    "47": {
       "name": "common_ono_pwr",
       "description": "ONO power-up event.",
       "categories": [
@@ -2627,7 +3029,7 @@
       ],
       "type": null
     },
-    "43": {
+    "48": {
       "name": "ipu_aieclk_status",
       "description": "IPU AIE changed to active, stop, or it is allowed to go into deep sleep.",
       "categories": [
@@ -2648,7 +3050,7 @@
       ],
       "type": null
     },
-    "44": {
+    "49": {
       "name": "ipu_hclk_status",
       "description": "IPU HCLK changed to active or is allowed to go into deep sleep.",
       "categories": [
@@ -2669,7 +3071,7 @@
       ],
       "type": null
     },
-    "45": {
+    "50": {
       "name": "l1mmu_pwr",
       "description": "L1MMU power-on event.",
       "categories": [
@@ -2690,7 +3092,7 @@
       ],
       "type": null
     },
-    "46": {
+    "51": {
       "name": "nbif_clk_status",
       "description": "IPU AIE changed to active, stop, or it is allowed to go into deep sleep.",
       "categories": [
@@ -2711,7 +3113,7 @@
       ],
       "type": null
     },
-    "47": {
+    "52": {
       "name": "pmfw_column_busy",
       "description": "PMFW column busy indicator was set.",
       "categories": [
@@ -2757,7 +3159,7 @@
       ],
       "type": null
     },
-    "48": {
+    "53": {
       "name": "uc_critical_error",
       "description": "uC reported a critical error.",
       "categories": [
@@ -2828,7 +3230,7 @@
       ],
       "type": null
     },
-    "49": {
+    "54": {
       "name": "npi_interrupt",
       "description": "NPI interrupt event.",
       "categories": [
@@ -2849,7 +3251,7 @@
       ],
       "type": null
     },
-    "50": {
+    "55": {
       "name": "ctx_error",
       "description": "There was an error with the hw context.",
       "categories": [
@@ -2878,7 +3280,7 @@
       ],
       "type": null
     },
-    "51": {
+    "56": {
       "name": "pmfw_msg_fail",
       "description": "Failed to send a message to PMFW.",
       "categories": [
@@ -2916,7 +3318,7 @@
       ],
       "type": null
     },
-    "52": {
+    "57": {
       "name": "dpm_set_state",
       "description": "DPM state (active/inactive) was changed for a specific DPM ID.",
       "categories": [
@@ -2953,7 +3355,7 @@
       ],
       "type": null
     },
-    "53": {
+    "58": {
       "name": "pmfw_get_aieclk",
       "description": "Request aieclk frequency to pmfw given a DPM level.",
       "categories": [
@@ -2990,7 +3392,7 @@
       ],
       "type": null
     },
-    "54": {
+    "59": {
       "name": "pmfw_get_npuhclk",
       "description": "Request npuhclk frequency to pmfw given a DPM level.",
       "categories": [
@@ -3027,7 +3429,7 @@
       ],
       "type": null
     },
-    "55": {
+    "60": {
       "name": "pmfw_set_aieclk",
       "description": "Set aie clk DPM level.",
       "categories": [
@@ -3064,7 +3466,7 @@
       ],
       "type": null
     },
-    "56": {
+    "61": {
       "name": "pmfw_set_npuhclk",
       "description": "Set aie clk DPM level.",
       "categories": [
@@ -3101,7 +3503,7 @@
       ],
       "type": null
     },
-    "57": {
+    "62": {
       "name": "dpm_algo_process_busy_calculated",
       "description": "System busyness percentage calculated by DPM algorithm.",
       "categories": [
@@ -3122,7 +3524,7 @@
       ],
       "type": null
     },
-    "58": {
+    "63": {
       "name": "dpm_algo_process_dpm_levels_calculated",
       "description": "DPM levels calculated when activity-based DPM modifier changes.",
       "categories": [
@@ -3159,7 +3561,7 @@
       ],
       "type": null
     },
-    "59": {
+    "64": {
       "name": "dpm_algo_qos_update",
       "description": "QoS DPM level recalculation with frequencies and computed levels.",
       "categories": [
@@ -3212,7 +3614,7 @@
       ],
       "type": null
     },
-    "60": {
+    "65": {
       "name": "pmfw_can_enter_z8",
       "description": "Indicate to PMFW whether Z8 can be entered or not.",
       "categories": [
@@ -3233,7 +3635,7 @@
       ],
       "type": null
     },
-    "61": {
+    "66": {
       "name": "sriov_pf_bdf",
       "description": "SR-IOV PF BDF information.",
       "categories": [
@@ -3278,7 +3680,7 @@
       ],
       "type": null
     },
-    "62": {
+    "67": {
       "name": "sriov_vf_routing",
       "description": "SR-IOV VF routing information.",
       "categories": [
@@ -3311,6 +3713,43 @@
           "type": "uint8",
           "count": 4,
           "format": ""
+        }
+      ],
+      "type": null
+    },
+    "68": {
+      "name": "debug_event",
+      "description": "Generic debug event for instrumentation during development and testing.",
+      "categories": [
+        "EVENT_TRACE_CATEGORY_DEBUG"
+      ],
+      "args_name": "debug_event",
+      "forced_id": false,
+      "category_mask": 4096,
+      "args": [
+        {
+          "name": "arg0",
+          "description": "Generic debug argument 0.",
+          "lookup": "",
+          "type": "uint32",
+          "count": 1,
+          "format": "08x"
+        },
+        {
+          "name": "arg1",
+          "description": "Generic debug argument 1.",
+          "lookup": "",
+          "type": "uint32",
+          "count": 1,
+          "format": "08x"
+        },
+        {
+          "name": "arg2",
+          "description": "Generic debug argument 2.",
+          "lookup": "",
+          "type": "uint32",
+          "count": 1,
+          "format": "08x"
         }
       ],
       "type": null
